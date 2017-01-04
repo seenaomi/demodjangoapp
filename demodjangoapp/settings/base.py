@@ -19,16 +19,27 @@ BROKER_URL = os.environ.get('RABBITMQ_URL')
 
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('SECRET_KEY')
+SECRET_KEY = '#hw547!xqjvn@%1^jz+6os8u=dfr8dom==!%rs)53&m%og9wo@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', False)
 
-TEMPLATE_DEBUG = True
-
-TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
-    'django.core.context_processors.request',
-)
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],
+        'DEBUG': True,
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
+]
 
 ALLOWED_HOSTS = ['*']
 
@@ -69,8 +80,6 @@ INSTALLED_APPS = [
 
 PROJECT_APPS = []
 
-INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + AUTHORED_APPS
-
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -95,7 +104,18 @@ WSGI_APPLICATION = 'demodjangoapp.wsgi.application'
 # Database
 
 import dj_database_url
-DATABASES = {'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))}
+# DATABASES = {'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))}
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'demodjangoapp',
+        'USER': 'demo',
+        'PASSWORD': 'demo',
+        'HOST': 'localhost',  # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
+        'PORT': '',  # Set to empty string for default.
+    }
+}
+
 
 from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {

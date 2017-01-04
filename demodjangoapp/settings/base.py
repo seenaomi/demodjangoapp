@@ -2,6 +2,7 @@ import os
 import sys
 import ldap
 import pytz
+import django.conf.global_settings as DEFAULT_SETTINGS
 
 from django_auth_ldap.config import LDAPSearch
 
@@ -10,18 +11,24 @@ root = lambda *x: os.path.join(BASE_DIR, *x)
 
 sys.path.insert(0, root('apps'))
 
-MEDIA_ROOT = os.path.abspath(os.path.join(BASE_DIR, "..", 'media'))
-
-MEDIA_URL = '/demodjangoapp/media/'
+MEDIA_ROOT = os.environ.get('MEDIA_ROOT')
 
 LOGIN_URL = '/demodjangoapp/'
 
+BROKER_URL = os.environ.get('RABBITMQ_URL')
+
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '&-nz7)80qo0oex0i%%61_!#oq^!%8(v_s=w=_4mz^bp(s&dqa7'
+SECRET_KEY = os.environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get('DEBUG', False)
+
+TEMPLATE_DEBUG = True
+
+TEMPLATE_CONTEXT_PROCESSORS = DEFAULT_SETTINGS.TEMPLATE_CONTEXT_PROCESSORS + (
+    'django.core.context_processors.request',
+)
 
 ALLOWED_HOSTS = ['*']
 
@@ -62,7 +69,7 @@ INSTALLED_APPS = [
 
 PROJECT_APPS = []
 
-INSTALLED_APPS += PROJECT_APPS
+INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + AUTHORED_APPS
 
 MIDDLEWARE_CLASSES = [
     'django.middleware.security.SecurityMiddleware',
@@ -75,6 +82,11 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
+if DEBUG:
+    THIRD_PARTY_APPS += (
+        'debug_toolbar.apps.DebugToolbarConfig',
+)
+
 ROOT_URLCONF = 'demodjangoapp.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
@@ -82,16 +94,8 @@ WSGI_APPLICATION = 'demodjangoapp.wsgi.application'
 
 # Database
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'demodjangoapp',
-        'USER': 'demo',
-        'PASSWORD': 'demo',
-        'HOST': 'localhost',  # Empty for localhost through domain sockets or '127.0.0.1' for localhost through TCP.
-        'PORT': '',  # Set to empty string for default.
-    }
-}
+import dj_database_url
+DATABASES = {'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))}
 
 from django.contrib.messages import constants as messages
 MESSAGE_TAGS = {
@@ -115,28 +119,11 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 
-STATIC_ROOT = ''
+STATIC_ROOT = os.environ.get('STATIC_ROOT')
 STATIC_URL = '/static/'
 
 
 # Additional locations of static files
-
-
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
-]
 
 # Password validation
 

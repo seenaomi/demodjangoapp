@@ -1,0 +1,12 @@
+# Versions are left out on purpose in order for you to use the latest ones.
+# After the first "pip install -r", just run "pip freeze" and add the version
+# to each package in each requirements/*.txt.
+
+Django==1.9.8
+django-debug-toolbar==1.5.0
+cryptography
+celery==3.1.20
+psycopg2==2.5.3  
+django-auth-ldap
+paramiko==2.0.2
+redis==2.10.5

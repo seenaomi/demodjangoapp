@@ -98,7 +98,7 @@ WSGI_APPLICATION = 'demodjangoapp.wsgi.application'
 
 # Database
 
-import dj_database_url
+# import dj_database_url
 # DATABASES = {'default': dj_database_url.config(default=os.environ.get('DATABASE_URL'))}
 DATABASES = {
     'default': {

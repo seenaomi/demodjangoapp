@@ -11,6 +11,9 @@ root = lambda *x: os.path.join(BASE_DIR, *x)
 
 sys.path.insert(0, root('apps'))
 
+DEBUG = True
+TEMPLATE_DEBUG = True 
+
 MEDIA_ROOT = os.environ.get('MEDIA_ROOT')
 
 LOGIN_URL = '/demodjangoapp/'
@@ -27,8 +30,9 @@ DEBUG = os.environ.get('DEBUG', False)
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'TEMPLATES_DEBUG': True,
+        'DIRS': [
+            os.path.join(BASE_DIR, 'templates'),
+        ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
